@@ -1,0 +1,120 @@
+version: "3.9"
+
+services:
+  application:
+    container_name: "${APPLICATION_NAME}-${APPLICATION_VERSION}"
+    image: "${APPLICATION_REGISTRY_IMAGE}:${APPLICATION_VERSION}"
+    restart: always
+    networks:
+      - application-network
+    depends_on:
+      - application-database
+    ports:
+      - ${APPLICATION_PORT_MAPPING_80}:80
+      - ${APPLICATION_PORT_MAPPING_443}:443
+      - ${APPLICATION_PORT_MAPPING_18443}:18443
+    volumes:
+      - application-volume-filestorage:/var/www/application/filestorage
+      - application-volume-archive:/var/www/application/archive
+    environment:
+      APPLICATION_SESSION_TIMEOUT: ${APPLICATION_SESSION_TIMEOUT}
+      APPLICATION_UPPERCASE_FIRMWARE_VERSIONS: ${APPLICATION_UPPERCASE_FIRMWARE_VERSIONS}
+      APPLICATION_ENV: ${APPLICATION_ENV}
+      APPLICATION_TRUSTED_PROXIES: ${APPLICATION_TRUSTED_PROXIES}
+      APPLICATION_TRUSTED_HEADERS: ${APPLICATION_TRUSTED_HEADERS}
+      APPLICATION_TRUSTED_HOSTS: ${APPLICATION_TRUSTED_HOSTS}
+      APPLICATION_CONTENT_SECURITY_POLICY_HEADER: ${APPLICATION_CONTENT_SECURITY_POLICY_HEADER}
+      APPLICATION_SSL_CERTIFICATE_CERTBOT_DOMAINS: ${APPLICATION_SSL_CERTIFICATE_CERTBOT_DOMAINS}
+      APPLICATION_SSL_CERTIFICATE_CERTBOT_EMAIL: ${APPLICATION_SSL_CERTIFICATE_CERTBOT_EMAIL}
+      APPLICATION_SSL_CERTIFICATE_FILE_CHAIN: ${APPLICATION_SSL_CERTIFICATE_FILE_CHAIN}
+      APPLICATION_SSL_CERTIFICATE_FILE_KEY: ${APPLICATION_SSL_CERTIFICATE_FILE_KEY}
+      APPLICATION_DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@application-database:3306/${MYSQL_DATABASE}?serverVersion=mariadb-10.4.26&charset=utf8mb4"
+      APPLICATION_PHPFPM_PM_MAX_CHILDREN: "${APPLICATION_PHPFPM_PM_MAX_CHILDREN}"
+      APPLICATION_PHP_MAX_FILE_UPLOADS: "${APPLICATION_PHP_MAX_FILE_UPLOADS}"
+      APPLICATION_PHP_UPLOAD_MAX_FILESIZE: "${APPLICATION_PHP_UPLOAD_MAX_FILESIZE}"
+      APPLICATION_PHP_MEMORY_LIMIT: "${APPLICATION_PHP_MEMORY_LIMIT}"
+      APPLICATION_PHP_POST_MAX_SIZE: "${APPLICATION_PHP_POST_MAX_SIZE}"
+      APPLICATION_PHP_MAX_INPUT_TIME: "${APPLICATION_PHP_MAX_INPUT_TIME}"
+      APPLICATION_PHP_MAX_EXECUTION_TIME: "${APPLICATION_PHP_MAX_EXECUTION_TIME}"
+      APPLICATION_PHP_TIMEZONE: "${APPLICATION_PHP_TIMEZONE}"
+      APPLICATION_MYSQL_SSL_CA: "${APPLICATION_MYSQL_SSL_CA}"
+      APPLICATION_MYSQL_SERVER_VALIDATION: "${APPLICATION_MYSQL_SERVER_VALIDATION}"
+      APPLICATION_MYSQL_SSL_KEY: "${APPLICATION_MYSQL_SSL_KEY}"
+      APPLICATION_MYSQL_SSL_CERT: "${APPLICATION_MYSQL_SSL_CERT}"
+      APPLICATION_DISABLE_HTTPS_REDIRECT: "${APPLICATION_DISABLE_HTTPS_REDIRECT}"
+      TZ: "${APPLICATION_TIMEZONE}"
+
+  application-database:
+    container_name: "${APPLICATION_NAME}-database-${APPLICATION_VERSION}"
+    image: mariadb:10.4.26
+    restart: always
+    networks:
+      - application-network
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      TZ: "${MYSQL_TIMEZONE}"
+    volumes:
+      - application-volume-database:/var/lib/mysql
+
+  sealman-api:
+    image: baurt/sealapi:0.1.0
+    container_name: sealman-api-0.1.0
+    depends_on:
+      - application
+    restart: always
+    pull_policy: always
+    environment:
+      - VERSION=${VERSION}
+      - PORT=${PORT}
+      - IOT_HUB_NAME=${IOT_HUB_NAME}
+      - SAS_TOKEN=${SAS_TOKEN}
+      - SEMS_URL=${SEMS_URL}
+      - SEMS_USER=${SEMS_USER}
+      - SEMS_PW=${SEMS_PW}
+      - SEMS_LOOKUP_INTERVAL=${SEMS_LOOKUP_INTERVAL}
+      - BLOB_STORAGE_ACCOUNT=${BLOB_STORAGE_ACCOUNT}
+      - BLOB_SAS_TOKEN_MODULE_CONF=${BLOB_SAS_TOKEN_MODULE_CONF}
+      - BLOB_SAS_TOKEN_WEB_FTP=${BLOB_SAS_TOKEN_WEB_FTP}
+      - AZURE_AD_TENANT_ID=${AZURE_AD_TENANT_ID}
+      - AZURE_AD_CLIENT_ID=${AZURE_AD_CLIENT_ID}
+      - AZURE_AD_SCOPES=${AZURE_AD_SCOPES}
+    ports:
+      - 5000:5000
+    networks:
+      - application-network
+
+  sealman-ui:
+    image: baurt/sealui:0.1.0
+    container_name: sealman-ui-0.1.0
+    depends_on:
+      - sealman-api
+    restart: always
+    pull_policy: always
+    environment:
+      - VITE_API_URI=${VITE_API_URI}
+      - VITE_API_SCOPES=${VITE_API_SCOPES}
+      - VITE_ENTRA_ID_AUTHORITY=${VITE_ENTRA_ID_AUTHORITY}
+      - VITE_ENTRA_ID_CLIENT_ID=${VITE_ENTRA_ID_CLIENT_ID}
+      - VITE_ENTRA_ID_REDIRECT_URI=${VITE_ENTRA_ID_REDIRECT_URI}
+      - VITE_MODULE_DEPLOYMENT=${VITE_MODULE_DEPLOYMENT}
+    ports:
+      - 3000:8080
+    networks:
+      - application-network
+
+networks:
+  application-network:
+    # name: "${APPLICATION_NAME}-network-${APPLICATION_VERSION}"
+    name: sealman-network
+    driver: bridge
+
+volumes:
+  application-volume-filestorage:
+    name: "${APPLICATION_NAME}-volume-filestorage"
+  application-volume-archive:
+    name: "${APPLICATION_NAME}-volume-archive"
+  application-volume-database:
+    name: "${APPLICATION_NAME}-volume-database-${APPLICATION_VERSION}"
