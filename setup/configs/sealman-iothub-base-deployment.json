@@ -114,6 +114,22 @@
                             }},
                             "status": "running",
                             "type": "docker"
+                        }},
+                        "seal-app-iotedge-proxy": {{
+                            "env": {{
+                                "EQUIPMENT_ID": {{
+                                    "value": "edge"
+                                }},
+                                "NODE_ID": {{
+                                    "value": "seal-app-iotedge-proxy"
+                                }}
+                            }},
+                            "restartPolicy": "always",
+                            "settings": {{
+                                "image": "{REGISTRY_URL}/seal-module-iotedge-proxy:release-0.1.0"
+                            }},
+                            "status": "running",
+                            "type": "docker"
                         }}
                     }}
                 }}

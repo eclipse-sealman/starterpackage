@@ -45,10 +45,10 @@ cp config.env config.env.local
 - Fill missing secrets in config.env.local
   Environmentals which need to be set in addition to defaults:
   
-| Variable                    | Description                                                                                         | Example                                                             |
-|----------------------------|-----------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
-| `IOTHUB_URL`               | Name of your previously created IoT Hub                                                             | `my-iot-hub.azure-devices.net`                                      |
-| `IOTHUB_SAS_TOKEN`          | SAS Token of the IoTHub with all permissions     | `si=<access-policy>&spr=https&sv=2024-11-04&sr=c&sig=<signature-key>` |
+| Variable                    | Description                                                                                         | Example                                                        |
+|----------------------------|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| `IOTHUB_URL`               | Name of your previously created IoT Hub                                                             | `my-iot-hub.azure-devices.net`                                 |
+| `IOTHUB_SAS_TOKEN`          | SAS Token of the IoTHub with all permissions     | `SharedAccessSignature <signature>` |
 
 - Install missing python requirements if needed
   ```shell

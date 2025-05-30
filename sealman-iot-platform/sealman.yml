@@ -60,8 +60,8 @@ services:
       - application-volume-database:/var/lib/mysql
 
   sealman-api:
-    image: baurt/sealapi:0.1.0
-    container_name: sealman-api-0.1.0
+    image: baurt/sealapi:0.1.7
+    container_name: sealman-api-0.1.7
     depends_on:
       - application
     restart: always
@@ -87,8 +87,8 @@ services:
       - application-network
 
   sealman-ui:
-    image: baurt/sealui:0.1.0
-    container_name: sealman-ui-0.1.0
+    image: baurt/sealui:0.1.4
+    container_name: sealman-ui-0.1.4
     depends_on:
       - sealman-api
     restart: always
