@@ -60,8 +60,8 @@ services:
       - application-volume-database:/var/lib/mysql
 
   sealman-api:
-    image: baurt/sealapi:0.1.7
-    container_name: sealman-api-0.1.7
+    image: baurt/sealapi:0.1.9
+    container_name: sealman-api-0.1.9
     depends_on:
       - application
     restart: always
@@ -87,8 +87,8 @@ services:
       - application-network
 
   sealman-ui:
-    image: baurt/sealui:0.1.4
-    container_name: sealman-ui-0.1.4
+    image: baurt/sealui:0.1.5
+    container_name: sealman-ui-0.1.5
     depends_on:
       - sealman-api
     restart: always
@@ -100,6 +100,8 @@ services:
       - VITE_ENTRA_ID_CLIENT_ID=${VITE_ENTRA_ID_CLIENT_ID}
       - VITE_ENTRA_ID_REDIRECT_URI=${VITE_ENTRA_ID_REDIRECT_URI}
       - VITE_MODULE_DEPLOYMENT=${VITE_MODULE_DEPLOYMENT}
+      - VITE_WEBVNC_API_KEY="vnIwWDqcccZoqJWMI7JvQXTUAs4NUNcQTztzTpRbI5eAk5iWKFjOy2ZpFgzJ3Nr3TRPmaQ-vsdnpeD1As0Es7mTf-h8TtvMHcfZVKaPFpxW1ZNDjqwoK59-dxbchIvWler4IWXT2G9FRl2x-IUTQ4g7GgseYQen1vLZBMHN7jVotc7p70zFzgDTXWGzEuTxqHuvMeGMFU0UfSlloCUxaiLSfV8h7G2Dnn3XjUQ9NpQ-zSnh3PKKLiILowNqmMStH"
+      - VITE_WEBVNC_URI="https://webvnc.internal.fht.apps.dev.gea.com/api"
     ports:
       - 3000:8080
     networks:
