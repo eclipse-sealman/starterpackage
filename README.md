@@ -80,6 +80,12 @@ Visit:
   ![img.png](docs/img/virtual-box-import.png)
   - Start VM and wait until ready
   - Note that the VM attaches to the Windows host by using NAT and is accessable by SSH via port forwarding on port ``2222`` 
+  - Optional: you can set a serial number as identifier for the device management in the virtual Edge Gateway using the following command:
+    ```bash
+    VBoxManage setextradata "VM name" "VBoxInternal/Devices/efi/0/Config/DmiSystemSerial" "SN-12345"
+    ```
+    Please note that the serialnumber cannot start with a number, otherwise the virtual Edge Gateway will not boot.
+    If you choose to not set a serial number, it will be automatically generated: "VirtualBox-UUID"
 
 - Configure SEMS for virtual Edge-Device using ``WSL-IP`` and reading the devices serial number ``device-servial-number`` - the default SSH password is ``123456``:
   ```bash
