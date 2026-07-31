@@ -11,7 +11,7 @@ Sealman and SmartEMS docker-compose file startup for local development
 - Python 3 for setup scripts
 - For Edge-Device Simulation:
   - VirtualBox (Version 7.1.8) for Windows for simulating Edge-Devices
-  - [EG500Mk2](https://stsealiottest.blob.core.windows.net/share/VirtualEG500Mk2-sealman.ova?sp=r&st=2025-05-26T09:18:55Z&se=2025-05-30T17:18:55Z&spr=https&sv=2024-11-04&sr=b&sig=B8w7aK%2Faz8yM5THG1Rly8C5vGtNb%2Ff6BmfOjldDQAx4%3D)
+  - [EG500Mk2](https://stsealiottest.blob.core.windows.net/share/VirtualEG500Mk2-sealman.ova?sp=r&st=2026-02-10T17:56:36Z&se=2028-01-01T02:11:36Z&spr=https&sv=2024-11-04&sr=b&sig=XjpaPvWNvNrFmi5YPrKWDnV%2Bc7VXs4q%2BynFyJeQQhTU%3D)
 
 
 # Start Sealman Platform locally
